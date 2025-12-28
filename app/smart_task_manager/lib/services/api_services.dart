@@ -1,17 +1,18 @@
 import 'package:dio/dio.dart';
+import 'package:smart_task_manager/models/task_history.dart';
 import '../models/task.dart';
 
 class ApiService {
   late final Dio _dio;
 
-  static const String baseUrl = 'http://10.0.2.2:3000/api';
+  static const String baseUrl = 'https://smart-task-manager-fu6v.onrender.com/api';
 
   ApiService() {
     _dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,
-        connectTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 90),
+        connectTimeout: const Duration(seconds: 90),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -62,12 +63,14 @@ class ApiService {
   }
 
   //* Get task by ID
-  Future<Task> getTaskById(String id) async {
+  Future<TaskWithHistory> getTaskById(String id) async {
     try {
       final response = await _dio.get('/tasks/$id');
 
       if (response.data['success'] == true) {
-        return Task.fromJson(response.data['data']);
+        print(response.data['data']);
+        print(response.data['data']['history'][0]);
+        return TaskWithHistory.fromMap(response.data['data']);
       }
       throw Exception('Failed to load task');
     } on DioException catch (e) {

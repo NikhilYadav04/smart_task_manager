@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:smart_task_manager/models/task_history.dart';
 import 'package:smart_task_manager/services/api_services.dart';
 import '../models/task.dart';
 
@@ -12,6 +13,8 @@ class TaskProvider extends ChangeNotifier {
   TaskStats? _stats;
   bool _isLoading = false;
   String? _error;
+  TaskWithHistory? _selectedTaskWithHistory;
+  bool _isLoadingHistory = false;
 
   //* Filters
   String? _statusFilter;
@@ -25,6 +28,10 @@ class TaskProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   bool get hasError => _error != null;
+
+  TaskWithHistory? get selectedTaskWithHistory => _selectedTaskWithHistory;
+
+  bool get isLoadingHistory => _isLoadingHistory;
 
   String? get statusFilter => _statusFilter;
   String? get categoryFilter => _categoryFilter;
@@ -164,6 +171,25 @@ class TaskProvider extends ChangeNotifier {
       _error = e.toString();
       notifyListeners();
       return false;
+    }
+  }
+
+  //* Load Task History
+  Future<void> loadTaskWithHistory(String taskId) async {
+    _isLoadingHistory = true;
+    _error = null;
+    notifyListeners();
+
+    try {
+      _selectedTaskWithHistory = await _apiService.getTaskById(taskId);
+      print(_selectedTaskWithHistory);
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
+      debugPrint('Error loading task history: $e');
+    } finally {
+      _isLoadingHistory = false;
+      notifyListeners();
     }
   }
 

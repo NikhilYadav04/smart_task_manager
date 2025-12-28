@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_task_manager/providers/task_provider.dart';
+import 'package:smart_task_manager/screens/tasks/task_history_screen.dart';
 import 'package:smart_task_manager/screens/tasks/task_update_screen.dart';
 import '../../models/task.dart';
 import '../../utils/task_utils.dart';
@@ -248,6 +249,55 @@ class TaskDetailBottomSheet extends StatelessWidget {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        width: sw * 0.03,
+                      ),
+                      Expanded(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: Colors.blue.shade200,
+                              width: 1,
+                            ),
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>TaskHistoryScreen(taskId: task.id)));
+                            },
+                            borderRadius: BorderRadius.circular(20),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: isTablet ? sh * 0.012 : sh * 0.015,
+                                horizontal: isTablet ? sw * 0.025 : sw * 0.04,
+                              ),
+                              child: FittedBox(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.history,
+                                      size: isTablet ? sw * 0.02 : sw * 0.04,
+                                      color: Colors.blue.shade700,
+                                    ),
+                                    SizedBox(width: sw * 0.02),
+                                    Text(
+                                      'History',
+                                      style: TextStyle(
+                                        fontSize:
+                                            isTablet ? sw * 0.02 : sw * 0.038,
+                                        color: Colors.blue.shade700,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       SizedBox(width: sw * 0.03),
                       Expanded(
                         child: Container(
@@ -269,25 +319,27 @@ class TaskDetailBottomSheet extends StatelessWidget {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                     ),
-                                    title: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.warning_amber_rounded,
-                                          color: Colors.red.shade700,
-                                          size:
-                                              isTablet ? sw * 0.028 : sw * 0.06,
-                                        ),
-                                        SizedBox(width: sw * 0.02),
-                                        Text(
-                                          'Delete Task',
-                                          style: TextStyle(
-                                            fontSize: isTablet
-                                                ? sw * 0.024
-                                                : sw * 0.045,
-                                            fontWeight: FontWeight.bold,
+                                    title: FittedBox(
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.warning_amber_rounded,
+                                            color: Colors.red.shade700,
+                                            size:
+                                                isTablet ? sw * 0.028 : sw * 0.06,
                                           ),
-                                        ),
-                                      ],
+                                          SizedBox(width: sw * 0.02),
+                                          Text(
+                                            'Delete Task',
+                                            style: TextStyle(
+                                              fontSize: isTablet
+                                                  ? sw * 0.024
+                                                  : sw * 0.045,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                     content: Text(
                                       'Are you sure you want to delete this task? This action cannot be undone.',
