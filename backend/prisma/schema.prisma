@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Task {
+  id                String    @id @default(uuid())
+  title             String
+  description       String?
+  category          String    @default("general")
+  priority          String    @default("low")
+  status            String    @default("pending")
+  assignedTo        String?   @map("assigned_to")
+  dueDate           DateTime? @map("due_date")
+  extractedEntities Json?     @map("extracted_entities")
+  suggestedActions  Json?     @map("suggested_actions")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  history TaskHistory[]
+
+  @@index([status])
+  @@index([category])
+  @@index([priority])
+  @@index([createdAt])
+  @@map("tasks")
+}
+
+model TaskHistory {
+  id        String   @id @default(uuid())
+  taskId    String   @map("task_id")
+  action    String
+  oldValue  Json?    @map("old_value")
+  newValue  Json?    @map("new_value")
+  changedBy String?  @map("changed_by")
+  changedAt DateTime @default(now()) @map("changed_at")
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([changedAt])
+  @@map("task_history")
+}

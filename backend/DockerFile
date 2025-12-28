@@ -1,0 +1,23 @@
+FROM node:18-alpine
+
+RUN apk add --no-cache openssl
+
+WORKDIR /app
+
+COPY package.json package-lock.json* ./
+
+# Copy Prisma schema
+COPY prisma ./prisma
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+RUN npm install --production
+
+COPY . .
+
+RUN npm prune --production
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]
