@@ -1,4 +1,4 @@
-# 🎯 Smart Task Manager - Backend API
+# 🎯 Smart Task Manager - Flutter App
 
 A task management system with **intelligent auto-classification** that automatically categorizes tasks, assigns priorities, extracts entities, and suggests relevant actions.
 
